@@ -1,0 +1,9 @@
+Spring:
+  datasource:
+    name: abms
+    url: jdbc:mysql://aniikiki.cn:3306/abms
+    username: root
+    password: 123456
+    hikari:
+      connection-timeout: 60000
+

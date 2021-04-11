@@ -1,0 +1,12 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: abms
+  profiles:
+    active: prod
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath*:com/aniikiki/abms/dao/mapper/*.xml
+  type-aliases-package: com.aniikiki.abms

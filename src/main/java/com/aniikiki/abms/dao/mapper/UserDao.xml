@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aniikiki.abms.dao.UserDao">
+    <resultMap id="BaseResultMap" type="UserEntity">
+        <id column="USER_ID" jdbcType="VARCHAR" property="userId"/>
+        <result column="USERNAME" jdbcType="VARCHAR" property="username"/>
+        <result column="PASSWORD" jdbcType="VARCHAR" property="password"/>
+        <result column="NICKNAME" jdbcType="VARCHAR" property="nickname"/>
+        <result column="EMAIL" jdbcType="VARCHAR" property="email"/>
+        <result column="REMARK" jdbcType="VARCHAR" property="remark"/>
+        <result column="STATUS" jdbcType="VARCHAR" property="status"/>
+        <result column="LAST_LOGIN_IP" jdbcType="VARCHAR" property="lastLoginIp"/>
+        <result column="LAST_LOGIN_TIME" jdbcType="VARCHAR" property="lastLoginTime"/>
+        <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime"/>
+        <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser"/>
+        <result column="UPDATE_TIME" jdbcType="VARCHAR" property="updateTime"/>
+        <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser"/>
+        <result column="TOKEN" jdbcType="VARCHAR" property="token"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        u.user_id, u.username, u.password, u.nickname, u.email, u.remark, u.status, u.last_login_ip, u.last_login_time,
+        u.create_time, u.create_user, u.update_time, u.update_user, u.token
+    </sql>
+
+    <sql id="Base_Criteria_Clause">
+        <where>
+            <if test='userId != null and userId != ""'>
+                and u.user_id = #{userId, jdbcType = VARCHAR}
+            </if>
+            <if test='username != null and username != ""'>
+                and u.username = #{username, jdbcType = VARCHAR}
+            </if>
+            <if test='password != null and password != ""'>
+                and u.password = #{password, jdbcType = VARCHAR}
+            </if>
+            <if test='nickname != null and nickname != ""'>
+                and instr(u.nickname, #{nickname, jdbcType = VARCHAR}) > 0
+            </if>
+            <if test='email != null and email != ""'>
+                and u.email = #{email, jdbcType = VARCHAR}
+            </if>
+            <if test='remark != null and remark != ""'>
+                and u.remark = #{remark, jdbcType = VARCHAR}
+            </if>
+            <if test='status != null and status != ""'>
+                and u.status = #{status, jdbcType = VARCHAR}
+            </if>
+            <if test='lastLoginIp != null and lastLoginIp != ""'>
+                and instr(u.last_login_ip, #{status, jdbcType = VARCHAR}) > 0
+            </if>
+            <choose>
+                <when test='dateType == "1"'>
+                    <if test='startDate != null and startDate != ""'>
+                        and u.create_time >= #{startDate, jdbcType = VARCHAR}
+                    </if>
+                    <if test='endDate != null and endDate != ""'>
+                        and #{endDate, jdbcType = VARCHAR} >= u.create_time
+                    </if>
+                </when>
+                <when test='dateType == "2"'>
+                    <if test='startDate != null and startDate != ""'>
+                        and u.update_time >= #{startDate, jdbcType = VARCHAR}
+                    </if>
+                    <if test='endDate != null and endDate != ""'>
+                        and #{endDate, jdbcType = VARCHAR} >= u.update_time
+                    </if>
+                </when>
+                <otherwise>
+                    <if test='startDate != null and startDate != ""'>
+                        and u.last_login_time >= #{startDate, jdbcType = VARCHAR}
+                    </if>
+                    <if test='endDate != null and endDate != ""'>
+                        and #{endDate, jdbcType = VARCHAR} >= u.last_login_time
+                    </if>
+                </otherwise>
+            </choose>
+            <if test='createUser != null and createUser != ""'>
+                and u.create_user = #{createUser, jdbcType = VARCHAR}
+            </if>
+            <if test='updateUser != null and updateUser != ""'>
+                and u.update_user = #{updateUser, jdbcType = VARCHAR}
+            </if>
+            <if test='token != null and token != ""'>
+                and instr(u.token, #{token, jdbcType = VARCHAR}) > 0
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectByCriteria" parameterType="UserDto" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"></include>
+        from
+            user u
+        <include refid="Base_Criteria_Clause"></include>
+    </select>
+
+    <update id="updateByPrimaryKeySelective" parameterType="UserDto">
+        update
+            user u
+        <set>
+            <if test='username != null and username != ""'>
+                u.username = #{username, jdbcType = VARCHAR},
+            </if>
+            <if test='password != null and password != ""'>
+                u.password = #{password, jdbcType = VARCHAR},
+            </if>
+            <if test='nickname != null and nickname != ""'>
+                instr(u.nickname, #{nickname, jdbcType = VARCHAR}) > 0,
+            </if>
+            <if test='email != null and email != ""'>
+                u.email = #{email, jdbcType = VARCHAR},
+            </if>
+            <if test='remark != null and remark != ""'>
+                u.remark = #{remark, jdbcType = VARCHAR},
+            </if>
+            <if test='status != null and status != ""'>
+                u.status = #{status, jdbcType = VARCHAR},
+            </if>
+            <if test='lastLoginIp != null and lastLoginIp != ""'>
+                u.last_login_ip = #{status, jdbcType = VARCHAR},
+            </if>
+            <if test='lastLoginTime != null and lastLoginTime != ""'>
+                u.last_login_time = #{lastLoginTime, jdbcType = VARCHAR},
+            </if>
+            <if test='updateTime != null and updateTime != ""'>
+                u.update_time = #{updateTime, jdbcType = VARCHAR},
+            </if>
+            <if test='updateUser != null and updateUser != ""'>
+                u.update_user = #{updateUser, jdbcType = VARCHAR},
+            </if>
+            <if test='token != null and token != ""'>
+                u.token = #{token, jdbcType = VARCHAR},
+            </if>
+        </set>
+        where
+            u.user_id = #{userId,jdbcType=VARCHAR}
+    </update>
+</mapper>
