@@ -1,3 +1,5 @@
+server:
+  port: 9080
 Spring:
   datasource:
     name: abms
@@ -6,4 +8,6 @@ Spring:
     password: 123456
     hikari:
       connection-timeout: 60000
-
+springfox:
+  documentation:
+    enabled: false

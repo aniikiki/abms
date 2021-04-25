@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aniikiki.abms.dao.system.DictDao">
+    <resultMap id="BaseResultMap" type="DictEntity">
+        <id column="DICT_ID" jdbcType="VARCHAR" property="dictId"/>
+        <result column="DICT_TYPE_CN" jdbcType="VARCHAR" property="dictTypeCn"/>
+        <result column="DICT_TYPE_EN" jdbcType="VARCHAR" property="dictTypeEn"/>
+        <result column="DICT_NAME" jdbcType="VARCHAR" property="dictName"/>
+        <result column="DICT_VALUE" jdbcType="VARCHAR" property="dictValue"/>
+        <result column="SORT" jdbcType="INTEGER" property="sort"/>
+        <result column="STATUS" jdbcType="VARCHAR" property="status"/>
+        <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser"/>
+        <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime"/>
+        <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser"/>
+        <result column="UPDATE_TIME" jdbcType="VARCHAR" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        d.dict_id, d.dict_type_cn, d.dict_type_en, d.dict_name, d.dict_value, d.sort,
+        d.status, d.create_time, d.create_user, d.update_time, d.update_user
+    </sql>
+
+    <sql id="Base_Criteria_Clause">
+        <where>
+            <if test='dictId != null and dictId != ""'>
+                and d.dict_id = #{dictId, jdbcType = VARCHAR}
+            </if>
+            <if test='dictTypeCn != null and dictTypeCn != ""'>
+                and instr(d.dict_type_cn, #{dictTypeCn, jdbcType = VARCHAR}) > 0
+            </if>
+            <if test='dictTypeEn != null and dictTypeEn != ""'>
+                and d.dict_type_en = #{dictTypeEn, jdbcType = VARCHAR}
+            </if>
+            <if test='dictName != null and dictName != ""'>
+                and instr(d.dict_type, #{dictName, jdbcType = VARCHAR}) > 0
+            </if>
+            <if test='dictValue != null and dictValue != ""'>
+                and instr(d.dict_value, #{dictValue, jdbcType = VARCHAR}) > 0
+            </if>
+            <if test='status != null and status != ""'>
+                and d.status = #{status, jdbcType = VARCHAR}
+            </if>
+            <if test='createUser != null and createUser != ""'>
+                and d.create_user = #{createUser, jdbcType = VARCHAR}
+            </if>
+            <if test='updateUser != null and updateUser != ""'>
+                and d.update_user = #{updateUser, jdbcType = VARCHAR}
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectByCriteria" parameterType="DictEntity" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"></include>
+        from
+            dict d
+        <include refid="Base_Criteria_Clause"></include>
+        order by
+            d.dict_type_en, d.sort
+    </select>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"></include>
+        from
+            dict d
+        where
+            d.dict_id = #{dictId, jdbcType=VARCHAR}
+    </select>
+
+    <insert id="insert" parameterType="DictEntity">
+        insert into dict (
+            dict_id,
+            dict_type_cn,
+            dict_type_en,
+            dict_name,
+            dict_value,
+            sort,
+            status,
+            create_user,
+            create_time,
+            update_user,
+            update_time
+        ) values (
+            #{dictId, jdbcType = VARCHAR},
+            #{dictTypeCn, jdbcType = VARCHAR},
+            #{dictTypeEn, jdbcType = VARCHAR},
+            #{dictName, jdbcType = VARCHAR},
+            #{dictValue, jdbcType = VARCHAR},
+            #{sort, jdbcType = INTEGER},
+            #{status, jdbcType = VARCHAR},
+            #{createUser, jdbcType = VARCHAR},
+            #{createTime, jdbcType = VARCHAR},
+            #{updateUser, jdbcType = VARCHAR},
+            #{updateTime, jdbcType = VARCHAR}
+        )
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="DictEntity">
+        update
+            dict d
+        <set>
+            <if test='dictTypeCn != null and dictTypeCn != ""'>
+                d.dict_type_cn = #{dictTypeCn, jdbcType = VARCHAR},
+            </if>
+            <if test='dictTypeEn != null and dictTypeEn != ""'>
+                d.dict_type_en = #{dictTypeEn, jdbcType = VARCHAR},
+            </if>
+            <if test='dictName != null and dictName != ""'>
+                d.dict_name = #{dictName, jdbcType = VARCHAR},
+            </if>
+            <if test='dictValue != null and dictValue != ""'>
+                d.dict_value = #{dictValue, jdbcType = VARCHAR},
+            </if>
+            <if test='sort != null and sort != ""'>
+                d.sort = #{sort, jdbcType = VARCHAR},
+            </if>
+            <if test='status != null and status != ""'>
+                d.status = #{status, jdbcType = VARCHAR},
+            </if>
+            <if test='updateTime != null and updateTime != ""'>
+                d.update_time = #{updateTime, jdbcType = VARCHAR},
+            </if>
+            <if test='updateUser != null and updateUser != ""'>
+                d.update_user = #{updateUser, jdbcType = VARCHAR},
+            </if>
+        </set>
+        where
+            d.dict_id = #{dictId, jdbcType=VARCHAR}
+    </update>
+</mapper>

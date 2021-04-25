@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.aniikiki.abms.dao.UserDao">
+<mapper namespace="com.aniikiki.abms.dao.system.UserDao">
     <resultMap id="BaseResultMap" type="UserEntity">
         <id column="USER_ID" jdbcType="VARCHAR" property="userId"/>
         <result column="USERNAME" jdbcType="VARCHAR" property="username"/>
@@ -84,6 +84,9 @@
             <if test='token != null and token != ""'>
                 and instr(u.token, #{token, jdbcType = VARCHAR}) > 0
             </if>
+            <if test='excludeUserId != null and excludeUserId != ""'>
+                and u.user_id != #{excludeUserId, jdbcType = VARCHAR}
+            </if>
         </where>
     </sql>
 
@@ -94,6 +97,40 @@
             user u
         <include refid="Base_Criteria_Clause"></include>
     </select>
+
+    <insert id="insert" parameterType="userEntity">
+        insert into user (
+            user_id,
+            username,
+            password,
+            nickname,
+            email,
+            remark,
+            status,
+            last_login_ip,
+            last_login_time,
+            create_time,
+            create_user,
+            update_time,
+            update_user,
+            token
+        ) values (
+            #{userId, jdbcType = VARCHAR},
+            #{username, jdbcType = VARCHAR},
+            #{password, jdbcType = VARCHAR},
+            #{nickname, jdbcType = VARCHAR},
+            #{email, jdbcType = VARCHAR},
+            #{remark, jdbcType = VARCHAR},
+            #{status, jdbcType = VARCHAR},
+            #{lastLoginIp, jdbcType = VARCHAR},
+            #{lastLoginTime, jdbcType = VARCHAR},
+            #{createTime, jdbcType = VARCHAR},
+            #{createUser, jdbcType = VARCHAR},
+            #{updateTime, jdbcType = VARCHAR},
+            #{updateUser, jdbcType = VARCHAR},
+            #{token, jdbcType = VARCHAR}
+        )
+    </insert>
 
     <update id="updateByPrimaryKeySelective" parameterType="UserDto">
         update
@@ -106,7 +143,7 @@
                 u.password = #{password, jdbcType = VARCHAR},
             </if>
             <if test='nickname != null and nickname != ""'>
-                instr(u.nickname, #{nickname, jdbcType = VARCHAR}) > 0,
+                u.nickname = #{nickname, jdbcType = VARCHAR},
             </if>
             <if test='email != null and email != ""'>
                 u.email = #{email, jdbcType = VARCHAR},
@@ -118,7 +155,7 @@
                 u.status = #{status, jdbcType = VARCHAR},
             </if>
             <if test='lastLoginIp != null and lastLoginIp != ""'>
-                u.last_login_ip = #{status, jdbcType = VARCHAR},
+                u.last_login_ip = #{lastLoginIp, jdbcType = VARCHAR},
             </if>
             <if test='lastLoginTime != null and lastLoginTime != ""'>
                 u.last_login_time = #{lastLoginTime, jdbcType = VARCHAR},
@@ -134,6 +171,15 @@
             </if>
         </set>
         where
-            u.user_id = #{userId,jdbcType=VARCHAR}
+            u.user_id = #{userId, jdbcType=VARCHAR}
     </update>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"></include>
+        from
+            user u
+        where
+            u.user_id = #{userId, jdbcType=VARCHAR}
+    </select>
 </mapper>

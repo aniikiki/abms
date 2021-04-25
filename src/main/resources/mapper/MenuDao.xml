@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aniikiki.abms.dao.system.MenuDao">
+    <resultMap id="BaseResultMap" type="MenuEntity">
+        <id column="MENU_ID" jdbcType="VARCHAR" property="menuId"/>
+        <result column="MENU_NAME" jdbcType="VARCHAR" property="menuName"/>
+        <result column="MENU_TYPE" jdbcType="VARCHAR" property="menuType"/>
+        <result column="MENU_URL" jdbcType="VARCHAR" property="menuUrl"/>
+        <result column="MENU_ICON" jdbcType="VARCHAR" property="menuIcon"/>
+        <result column="SORT" jdbcType="INTEGER" property="sort"/>
+        <result column="PID" jdbcType="VARCHAR" property="pid"/>
+        <result column="STATUS" jdbcType="VARCHAR" property="status"/>
+        <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser"/>
+        <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime"/>
+        <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser"/>
+        <result column="UPDATE_TIME" jdbcType="VARCHAR" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        m.menu_id, m.menu_name, m.menu_type, m.menu_url, m.menu_icon, m.sort, m.pid,
+        m.status, m.create_user, m.create_time, m.update_user, m.update_time
+    </sql>
+
+    <sql id="Base_Criteria_Clause">
+        <where>
+            <if test='menuId != null and menuId != ""'>
+                and m.menu_id = #{menuId, jdbcType = VARCHAR}
+            </if>
+            <if test='menuName != null and menuName != ""'>
+                and instr(m.menu_name, #{menuName, jdbcType = VARCHAR}) > 0
+            </if>
+            <if test='menuType != null and menuType != ""'>
+                and m.menu_type = #{menuType, jdbcType = VARCHAR}
+            </if>
+            <if test='menuUrl != null and menuUrl != ""'>
+                and instr(m.menu_url, #{menuUrl, jdbcType = VARCHAR}) > 0
+            </if>
+            <if test='menuIcon != null and menuIcon != ""'>
+                and m.menu_icon = #{menuIcon, jdbcType = VARCHAR}
+            </if>
+            <if test='sort != null'>
+                and m.sort = #{sort, jdbcType = INTEGER}
+            </if>
+            <if test='pid != null and pid != ""'>
+                and m.pid = #{pid, jdbcType = VARCHAR}
+            </if>
+            <if test='status != null and status != ""'>
+                and m.status = #{status, jdbcType = VARCHAR}
+            </if>
+            <if test='createUser != null and createUser != ""'>
+                and m.create_user = #{createUser, jdbcType = VARCHAR}
+            </if>
+            <if test='updateUser != null and updateUser != ""'>
+                and m.update_user = #{updateUser, jdbcType = VARCHAR}
+            </if>
+            <if test='excludeStatus != null and excludeStatus != ""'>
+                and m.status != #{excludeStatus, jdbcType = VARCHAR}
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectByCriteria" parameterType="MenuDto" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"></include>
+        from
+            menu m
+        <include refid="Base_Criteria_Clause"></include>
+        order by
+            m.pid, m.sort
+    </select>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"></include>
+        from
+            menu m
+        where
+            m.menu_id = #{menuId, jdbcType=VARCHAR}
+    </select>
+
+    <insert id="insert" parameterType="MenuEntity">
+        insert into menu (
+            menu_id,
+            menu_name,
+            menu_type,
+            menu_url,
+            menu_icon,
+            sort,
+            pid,
+            status,
+            create_user,
+            create_time,
+            update_user,
+            update_time
+        ) values (
+            #{menuId, jdbcType = VARCHAR},
+            #{menuName, jdbcType = VARCHAR},
+            #{menuType, jdbcType = VARCHAR},
+            #{menuUrl, jdbcType = VARCHAR},
+            #{menuIcon, jdbcType = VARCHAR},
+            #{sort, jdbcType = INTEGER},
+            #{pid, jdbcType = VARCHAR},
+            #{status, jdbcType = VARCHAR},
+            #{createUser, jdbcType = VARCHAR},
+            #{createTime, jdbcType = VARCHAR},
+            #{updateUser, jdbcType = VARCHAR},
+            #{updateTime, jdbcType = VARCHAR}
+        )
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="MenuEntity">
+        update
+            menu m
+        <set>
+            <if test='menuName != null and menuName != ""'>
+                m.menu_name = #{menuName, jdbcType = VARCHAR},
+            </if>
+            <if test='menuType != null and menuType != ""'>
+                m.menu_type = #{menuType, jdbcType = VARCHAR},
+            </if>
+            <if test='menuUrl != null and menuUrl != ""'>
+                m.menu_url = #{menuUrl, jdbcType = VARCHAR},
+            </if>
+            <if test='menuIcon != null and menuIcon != ""'>
+                m.menu_icon = #{menuIcon, jdbcType = VARCHAR},
+            </if>
+            <if test='sort != null and sort != ""'>
+                m.sort = #{sort, jdbcType = INTEGER},
+            </if>
+            <if test='pid != null and pid != ""'>
+                m.pid = #{pid, jdbcType = VARCHAR},
+            </if>
+            <if test='status != null and status != ""'>
+                m.status = #{status, jdbcType = VARCHAR},
+            </if>
+            <if test='updateUser != null and updateUser != ""'>
+                m.update_user = #{updateUser, jdbcType = VARCHAR},
+            </if>
+            <if test='updateTime != null and updateTime != ""'>
+                m.update_time = #{updateTime, jdbcType = VARCHAR},
+            </if>
+        </set>
+        where
+            m.menu_id = #{menuId, jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateStatusBatch" parameterType="MenuDto">
+        update
+            menu m
+        set
+            m.status = #{status, jdbcType = VARCHAR},
+            m.update_user = #{updateUser, jdbcType = VARCHAR},
+            m.update_time = #{updateTime, jdbcType = VARCHAR}
+        where
+            m.menu_id in
+        <foreach collection="descendantList" item="menuId" index="index" open="(" separator=","  close=")">
+            #{menuId, jdbcType = VARCHAR}
+        </foreach>
+    </update>
+</mapper>

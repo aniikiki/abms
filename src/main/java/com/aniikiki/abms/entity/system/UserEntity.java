@@ -1,13 +1,16 @@
-package com.aniikiki.abms.entity;
+package com.aniikiki.abms.entity.system;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.aniikiki.abms.entity.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
 
 @Data
-public class UserEntity implements Serializable {
+@ApiModel(description = "用户实体类")
+public class UserEntity extends BaseEntity {
 
     @ApiModelProperty("用户id")
     private String userId;
@@ -15,7 +18,7 @@ public class UserEntity implements Serializable {
     @ApiModelProperty("用户名")
     private String username;
 
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ApiModelProperty("用户密码")
     private String password;
 
@@ -28,32 +31,15 @@ public class UserEntity implements Serializable {
     @ApiModelProperty("备注")
     private String remark;
 
-    @ApiModelProperty("状态 -1 删除 0 停用 1 正常")
-    private String status;
-
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @ApiModelProperty("最后登录ip")
     private String lastLoginIp;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @ApiModelProperty("最后登录时间")
     private String lastLoginTime;
 
-    @JsonIgnore
-    @ApiModelProperty("创建时间")
-    private String createTime;
-
-    @JsonIgnore
-    @ApiModelProperty("创建人")
-    private String createUser;
-
-    @JsonIgnore
-    @ApiModelProperty("修改时间")
-    private String updateTime;
-
-    @JsonIgnore
-    @ApiModelProperty("修改人")
-    private String updateUser;
-
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @ApiModelProperty("登录Token")
     private String token;
 

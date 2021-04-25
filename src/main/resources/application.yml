@@ -1,12 +1,15 @@
-server:
-  port: 8080
 spring:
   application:
     name: abms
   profiles:
-    active: prod
+    active: dev
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
-  mapper-locations: classpath*:com/aniikiki/abms/dao/mapper/*.xml
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath*:mapper/*.xml
   type-aliases-package: com.aniikiki.abms
+# 分页插件
+pagehelper:
+  helper-dialect: mysql # 配置数据库方言
+  reasonable: true # 分页合理化参数

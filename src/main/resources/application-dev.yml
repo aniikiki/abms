@@ -1,0 +1,20 @@
+server:
+  port: 8080
+  servlet:
+    session:
+      timeout: 3600  #以秒为单位
+Spring:
+  datasource:
+    name: abms
+    url: jdbc:mysql://aniikiki.cn:3306/abms
+    username: root
+    password: 123456
+    hikari:
+      connection-timeout: 60000
+knife4j:
+  # 开启增强配置
+  enable: true
+  basic:
+    enable: false
+    username: abms
+    password: qazwsx
