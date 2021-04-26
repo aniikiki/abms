@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aniikiki.abms.dao.contacts.ContactsGroupDao">
+    <resultMap id="BaseResultMap" type="ContactsGroupEntity">
+        <id column="GROUP_ID" jdbcType="VARCHAR" property="groupId"/>
+        <result column="GROUP_NAME" jdbcType="VARCHAR" property="groupName"/>
+        <result column="GROUP_REMARK" jdbcType="VARCHAR" property="groupRemark"/>
+        <result column="STATUS" jdbcType="VARCHAR" property="status"/>
+        <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser"/>
+        <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime"/>
+        <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser"/>
+        <result column="UPDATE_TIME" jdbcType="VARCHAR" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        g.group_id, g.group_name, g.group_remark, g.status,
+        g.create_user, g.create_time, g.update_user, g.update_time
+    </sql>
+
+    <sql id="Base_Criteria_Clause">
+        <where>
+            <if test='groupId != null and groupId != ""'>
+                and g.group_id = #{groupId, jdbcType = VARCHAR}
+            </if>
+            <if test='groupName != null and groupName != ""'>
+                and instr(g.group_name, #{groupName, jdbcType = VARCHAR}) > 0
+            </if>
+            <if test='groupRemark != null and groupRemark != ""'>
+                and instr(g.group_remark, #{groupRemark, jdbcType = VARCHAR}) > 0
+            </if>
+            <if test='status != null and status != ""'>
+                and g.status = #{status, jdbcType = VARCHAR}
+            </if>
+            <if test='createUser != null and createUser != ""'>
+                and g.create_user = #{createUser, jdbcType = VARCHAR}
+            </if>
+            <if test='updateUser != null and updateUser != ""'>
+                and g.update_user = #{updateUser, jdbcType = VARCHAR}
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectByCriteria" parameterType="ContactsGroupDto" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"></include>
+        from
+            contacts_group g
+        <include refid="Base_Criteria_Clause"></include>
+        order by
+            g.group_id
+    </select>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"></include>
+        from
+            contacts_group g
+        where
+            g.group_id = #{groupId, jdbcType=VARCHAR}
+    </select>
+
+    <insert id="insert" parameterType="ContactsGroupEntity">
+        insert into contacts_group (
+            group_id,
+            group_name,
+            group_remark,
+            status,
+            create_user,
+            create_time,
+            update_user,
+            update_time
+        ) values (
+            #{groupId, jdbcType = VARCHAR},
+            #{groupName, jdbcType = VARCHAR},
+            #{groupRemark, jdbcType = VARCHAR},
+            #{status, jdbcType = VARCHAR},
+            #{createUser, jdbcType = VARCHAR},
+            #{createTime, jdbcType = VARCHAR},
+            #{updateUser, jdbcType = VARCHAR},
+            #{updateTime, jdbcType = VARCHAR}
+        )
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="ContactsGroupEntity">
+        update
+            contacts_group g
+        <set>
+            <if test='groupName != null and groupName != ""'>
+                g.group_name = #{groupName, jdbcType = VARCHAR},
+            </if>
+            <if test='groupRemark != null and groupRemark != ""'>
+                g.group_remark = #{groupRemark, jdbcType = VARCHAR},
+            </if>
+            <if test='status != null and status != ""'>
+                g.status = #{status, jdbcType = VARCHAR},
+            </if>
+            <if test='updateUser != null and updateUser != ""'>
+                g.update_user = #{updateUser, jdbcType = VARCHAR},
+            </if>
+            <if test='updateTime != null and updateTime != ""'>
+                g.update_time = #{updateTime, jdbcType = VARCHAR},
+            </if>
+        </set>
+        where
+            g.group_id = #{groupId, jdbcType=VARCHAR}
+    </update>
+</mapper>

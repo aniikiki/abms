@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aniikiki.abms.dao.contacts.ContactsDao">
+    <resultMap id="BaseResultMap" type="ContactsEntity">
+        <id column="CONTACT_ID" jdbcType="VARCHAR" property="contactId"/>
+        <result column="CONTACT_NAME" jdbcType="VARCHAR" property="contactName"/>
+        <result column="CONTACT_MOBILE" jdbcType="VARCHAR" property="contactMobile"/>
+        <result column="CONTACT_TEL" jdbcType="VARCHAR" property="contactTel"/>
+        <result column="CONTACT_EMAIL" jdbcType="VARCHAR" property="contactEmail"/>
+        <result column="CONTACT_ADDRESS" jdbcType="VARCHAR" property="contactAddress"/>
+        <result column="CONTACT_NICKNAME" jdbcType="VARCHAR" property="contactNickname"/>
+        <result column="CONTACT_BIRTHDAY" jdbcType="VARCHAR" property="contactBirthday"/>
+        <result column="CONTACT_REMARK" jdbcType="VARCHAR" property="contactRemark"/>
+        <result column="CONTACT_ICON" jdbcType="VARCHAR" property="contactIcon"/>
+        <result column="STATUS" jdbcType="VARCHAR" property="status"/>
+        <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser"/>
+        <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime"/>
+        <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser"/>
+        <result column="UPDATE_TIME" jdbcType="VARCHAR" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        c.contact_id, c.contact_name, c.contact_mobile, c.contact_tel, c.contact_email,
+        c.contact_address, c.contact_nickname, c.contact_birthday, c.contact_remark,
+        c.contact_icon, c.status, c.create_time, c.create_user, c.update_time, c.update_user
+    </sql>
+
+    <sql id="Base_Criteria_Clause">
+        <where>
+            <if test='contactId != null and contactId != ""'>
+                and c.contact_id = #{contactId, jdbcType = VARCHAR}
+            </if>
+            <if test='contactName != null and contactName != ""'>
+                and instr(c.contact_name, #{contactName, jdbcType = VARCHAR}) > 0
+            </if>
+            <if test='contactMobile != null and contactMobile != ""'>
+                and instr(c.contact_mobile, #{contactMobile, jdbcType = VARCHAR}) > 0
+            </if>
+            <if test='contactTel != null and contactTel != ""'>
+                and instr(c.contact_tel, #{contactTel, jdbcType = VARCHAR}) > 0
+            </if>
+            <if test='contactEmail != null and contactEmail != ""'>
+                and instr(c.contact_email, #{contactEmail, jdbcType = VARCHAR}) > 0
+            </if>
+            <if test='contactAddress != null and contactAddress != ""'>
+                and instr(c.contact_address, #{contactAddress, jdbcType = VARCHAR}) > 0
+            </if>
+            <if test='contactNickname != null and contactNickname != ""'>
+                and instr(c.contact_nickname, #{contactNickname, jdbcType = VARCHAR}) > 0
+            </if>
+            <if test='contactBirthday != null and contactBirthday != ""'>
+                and instr(c.contact_birthday, #{contactBirthday, jdbcType = VARCHAR}) > 0
+            </if>
+            <if test='contactRemark != null and contactRemark != ""'>
+                and instr(c.contact_remark, #{contactRemark, jdbcType = VARCHAR}) > 0
+            </if>
+            <if test='status != null and status != ""'>
+                and c.status = #{status, jdbcType = VARCHAR}
+            </if>
+            <if test='createUser != null and createUser != ""'>
+                and c.create_user = #{createUser, jdbcType = VARCHAR}
+            </if>
+            <if test='updateUser != null and updateUser != ""'>
+                and c.update_user = #{updateUser, jdbcType = VARCHAR}
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectByCriteria" parameterType="ContactsDto" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"></include>
+        from
+            contacts c
+        <include refid="Base_Criteria_Clause"></include>
+        order by
+            c.contact_id
+    </select>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"></include>
+        from
+            contacts c
+        where
+            c.contact_id = #{contactId, jdbcType=VARCHAR}
+    </select>
+
+    <insert id="insert" parameterType="ContactsEntity">
+        insert into contacts (
+            contact_id,
+            contact_name,
+            contact_mobile,
+            contact_tel,
+            contact_email,
+            contact_address,
+            contact_nickname,
+            contact_birthday,
+            contact_remark,
+            contact_icon,
+            status,
+            create_user,
+            create_time,
+            update_user,
+            update_time
+        ) values (
+            #{contactId, jdbcType = VARCHAR},
+            #{contactName, jdbcType = VARCHAR},
+            #{contactMobile, jdbcType = VARCHAR},
+            #{contactTel, jdbcType = VARCHAR},
+            #{contactEmail, jdbcType = VARCHAR},
+            #{contactAddress, jdbcType = VARCHAR},
+            #{contactNickname, jdbcType = VARCHAR},
+            #{contactBirthday, jdbcType = VARCHAR},
+            #{contactRemark, jdbcType = VARCHAR},
+            #{contactIcon, jdbcType = VARCHAR},
+            #{status, jdbcType = VARCHAR},
+            #{createUser, jdbcType = VARCHAR},
+            #{createTime, jdbcType = VARCHAR},
+            #{updateUser, jdbcType = VARCHAR},
+            #{updateTime, jdbcType = VARCHAR}
+        )
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="ContactsEntity">
+        update
+            contacts c
+        <set>
+            <if test='contactName != null and contactName != ""'>
+                c.contact_name = #{contactName, jdbcType = VARCHAR},
+            </if>
+            <if test='contactMobile != null and contactMobile != ""'>
+                c.contact_mobile = #{contactMobile, jdbcType = VARCHAR},
+            </if>
+            <if test='contactTel != null and contactTel != ""'>
+                c.contact_tel = #{contactTel, jdbcType = VARCHAR},
+            </if>
+            <if test='contactEmail != null and contactEmail != ""'>
+                c.contact_email = #{contactEmail, jdbcType = VARCHAR},
+            </if>
+            <if test='contactAddress != null and contactAddress != ""'>
+                c.contact_address = #{contactAddress, jdbcType = VARCHAR},
+            </if>
+            <if test='contactNickname != null and contactNickname != ""'>
+                c.contact_nickname = #{contactNickname, jdbcType = VARCHAR},
+            </if>
+            <if test='contactBirthday != null and contactBirthday != ""'>
+                c.contact_birthday = #{contactBirthday, jdbcType = VARCHAR},
+            </if>
+            <if test='contactRemark != null and contactRemark != ""'>
+                c.contact_remark = #{contactRemark, jdbcType = VARCHAR},
+            </if>
+            <if test='contactIcon != null and contactIcon != ""'>
+                c.contact_icon = #{contactIcon, jdbcType = VARCHAR},
+            </if>
+            <if test='status != null and status != ""'>
+                c.status = #{status, jdbcType = VARCHAR},
+            </if>
+            <if test='updateUser != null and updateUser != ""'>
+                c.update_user = #{updateUser, jdbcType = VARCHAR},
+            </if>
+            <if test='updateTime != null and updateTime != ""'>
+                c.update_time = #{updateTime, jdbcType = VARCHAR},
+            </if>
+        </set>
+        where
+            c.contact_id = #{contactId, jdbcType=VARCHAR}
+    </update>
+</mapper>
