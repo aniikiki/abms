@@ -3,6 +3,7 @@ package com.aniikiki.abms.service.contacts.impl;
 import com.aniikiki.abms.constant.DataStatus;
 import com.aniikiki.abms.constant.ModelOpType;
 import com.aniikiki.abms.dao.contacts.ContactsDao;
+import com.aniikiki.abms.dao.contacts.ContactsGroupRelDao;
 import com.aniikiki.abms.dto.contacts.ContactsDto;
 import com.aniikiki.abms.entity.contacts.ContactsEntity;
 import com.aniikiki.abms.service.contacts.ContactsService;
@@ -22,9 +23,17 @@ public class ContactsServiceImpl implements ContactsService {
     @Autowired
     private ContactsDao contactsDao;
 
+    @Autowired
+    private ContactsGroupRelDao contactsGroupRelDao;
+
     @Override
     public List<ContactsEntity> getContactsList(ContactsDto dto, Integer pageNum, Integer pageSize) {
         PageHelper.startPage(pageNum, pageSize);
+        return contactsDao.selectByCriteria(dto);
+    }
+
+    @Override
+    public List<ContactsEntity> getContactsList(ContactsDto dto) {
         return contactsDao.selectByCriteria(dto);
     }
 
@@ -45,6 +54,19 @@ public class ContactsServiceImpl implements ContactsService {
     public int updateContact(ContactsEntity contact) {
         ModelUtil.setBasicModelData(contact, contact.getUpdateUser(), ModelOpType.UPDATE);
         return contactsDao.updateByPrimaryKeySelective(contact);
+    }
+
+    @Override
+    public int deleteContact(String contactId, String currentUserId) {
+        //与关联的群组解除关联
+        contactsGroupRelDao.updateStatusByCriteria(null, contactId, DataStatus.DELETION.getCode(), currentUserId, ModelUtil.now());
+
+        ContactsEntity contact = new ContactsEntity();
+        contact.setContactId(contactId);
+        contact.setStatus(DataStatus.DELETION.getCode());
+        contact.setUpdateUser(currentUserId);
+
+        return this.updateContact(contact);
     }
 
 }

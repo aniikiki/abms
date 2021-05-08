@@ -44,7 +44,7 @@ public class RoleController extends BaseController {
     @GetMapping("/info/{roleId}")
     public CommonResult<RoleEntity> getRoleInfo(@PathVariable(value = "roleId") String roleId) {
         RoleEntity role = roleService.getRoleInfo(roleId);
-        if (role != null) {
+        if (role != null && !DataStatus.DELETION.getCode().equals(role.getStatus())) {
             return CommonResult.success(role);
         } else {
             return CommonResult.failed(ResultMessage.SYS_ROLE_NOT_FOUND);

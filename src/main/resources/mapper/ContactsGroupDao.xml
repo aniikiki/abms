@@ -12,6 +12,10 @@
         <result column="UPDATE_TIME" jdbcType="VARCHAR" property="updateTime"/>
     </resultMap>
 
+    <resultMap id="BaseRelResultMap" type="ContactsGroupEntity" extends="BaseResultMap">
+        <collection property="relList" column="{groupId=GROUP_ID}" javaType="java.util.List" ofType="ContactsGroupRelEntity" select="com.aniikiki.abms.dao.contacts.ContactsGroupRelDao.selectByCriteria"/>
+    </resultMap>
+
     <sql id="Base_Column_List">
         g.group_id, g.group_name, g.group_remark, g.status,
         g.create_user, g.create_time, g.update_user, g.update_time
@@ -50,7 +54,7 @@
             g.group_id
     </select>
 
-    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+    <select id="selectByPrimaryKey" resultMap="BaseRelResultMap">
         select
             <include refid="Base_Column_List"></include>
         from

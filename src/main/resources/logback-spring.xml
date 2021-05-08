@@ -23,7 +23,7 @@
     <appender name="dailyRollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${log.filePath}</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>>${log.filePath}.%d{yyyy-MM-dd}</FileNamePattern>
+            <FileNamePattern>${log.filePath}.%d{yyyy-MM-dd}</FileNamePattern>
             <maxHistory>1000</maxHistory>
         </rollingPolicy>
         <encoder>

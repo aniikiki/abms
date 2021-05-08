@@ -35,16 +35,26 @@ public class ContactsController extends BaseController {
     @PostMapping("/list")
     public CommonResult<CommonPage<ContactsEntity>> getContactsList(@RequestBody ContactsDto dto,
                                                                 @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
-                                                                @RequestParam(value = "pageSize", defaultValue = "9") Integer pageSize) {
+                                                                @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
+        dto.setCreateUser(this.getCurrentUserId());
         List<ContactsEntity> contactsList = contactsService.getContactsList(dto, pageNum, pageSize);
         return CommonResult.success(CommonPage.restPage(contactsList));
+    }
+
+    @ApiOperation("所有联系人")
+    @PostMapping("/all")
+    public CommonResult<List<ContactsEntity>> getContactsList(@RequestBody ContactsDto dto) {
+        dto.setCreateUser(this.getCurrentUserId());
+        dto.setStatus(DataStatus.ENABLE.getCode());
+        List<ContactsEntity> contactsList = contactsService.getContactsList(dto);
+        return CommonResult.success(contactsList);
     }
 
     @ApiOperation("联系人信息")
     @GetMapping("/info/{contactId}")
     public CommonResult<ContactsEntity> getContactsInfo(@PathVariable(value = "contactId") String contactId) {
         ContactsEntity contact = contactsService.getContactsInfo(contactId);
-        if (contact != null) {
+        if (contact != null && !DataStatus.DELETION.getCode().equals(contact.getStatus())) {
             return CommonResult.success(contact);
         } else {
             return CommonResult.failed(ResultMessage.SYS_CONTACT_NOT_FOUND);
@@ -86,12 +96,8 @@ public class ContactsController extends BaseController {
     @ApiOperation("删除联系人")
     @PostMapping("/delete/{contactId}")
     public CommonResult deleteContact(@PathVariable( value = "contactId") String contactId) {
-        ContactsEntity contact = new ContactsEntity();
-        contact.setContactId(contactId);
-        contact.setStatus(DataStatus.DELETION.getCode());
-        contact.setUpdateUser(this.getCurrentUserId());
+        int count = contactsService.deleteContact(contactId, this.getCurrentUserId());
 
-        int count = contactsService.updateContact(contact);
         if (count > 0) {
             return CommonResult.success(count);
         } else {

@@ -63,6 +63,21 @@
             <if test='updateUser != null and updateUser != ""'>
                 and c.update_user = #{updateUser, jdbcType = VARCHAR}
             </if>
+            <if test='groupIdArr != null and groupIdArr.length > 0'>
+                and c.contact_id in (
+                    select
+                        r.contact_id
+                    from
+                        contacts_group_rel r
+                    where
+                        r.status = '1'
+                    and
+                        r.group_id in
+                    <foreach item="item" index="index" collection="groupIdArr" open="(" separator="," close=")">
+                        #{item, jdbcType = VARCHAR}
+                    </foreach>
+                )
+            </if>
         </where>
     </sql>
 

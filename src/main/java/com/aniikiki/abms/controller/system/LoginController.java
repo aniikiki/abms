@@ -71,7 +71,7 @@ public class LoginController extends BaseController {
         String msg = userService.updatePassword(dto);
 
         if (StringUtils.isEmpty(msg)) {
-            return CommonResult.success("");
+            return this.logout();
         } else {
             return CommonResult.failed(msg);
         }

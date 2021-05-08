@@ -42,7 +42,7 @@ public class MenuController extends BaseController {
     @GetMapping("/info/{menuId}")
     public CommonResult<MenuEntity> getMenuInfo(@PathVariable(value = "menuId") String menuId) {
         MenuEntity menu = menuService.getMenuInfo(menuId);
-        if (menu != null) {
+        if (menu != null && !DataStatus.DELETION.getCode().equals(menu.getStatus())) {
             return CommonResult.success(menu);
         } else {
             return CommonResult.failed(ResultMessage.SYS_MENU_NOT_FOUND);

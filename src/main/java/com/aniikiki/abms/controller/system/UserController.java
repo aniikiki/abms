@@ -88,7 +88,7 @@ public class UserController extends BaseController {
     @GetMapping("/info/{userId}")
     public CommonResult<UserEntity> getUserInfo(@PathVariable(value = "userId") String userId) {
         UserEntity user = userService.getUserInfo(userId);
-        if (user != null) {
+        if (user != null && !DataStatus.DELETION.getCode().equals(user.getStatus())) {
             return CommonResult.success(user);
         } else {
             return CommonResult.failed(ResultMessage.SYS_USER_NOT_FOUND);

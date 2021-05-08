@@ -10,4 +10,11 @@ Spring:
       connection-timeout: 60000
 springfox:
   documentation:
-    enabled: false
+    enabled: true
+knife4j:
+  # 开启增强配置
+  enable: true
+  basic:
+    enable: true
+    username: abms
+    password: qazwsx

@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @ApiModel(description = "联系人群组实体类")
 public class ContactsGroupEntity extends BaseEntity {
@@ -17,5 +19,8 @@ public class ContactsGroupEntity extends BaseEntity {
 
     @ApiModelProperty("联系人群组备注")
     private String groupRemark;
+
+    @ApiModelProperty("群组联系人关联列表")
+    private List<ContactsGroupRelEntity> relList;
 
 }
