@@ -4,6 +4,7 @@ import com.aniikiki.abms.common.CommonResult;
 import com.aniikiki.abms.constant.CommonConstants;
 import com.aniikiki.abms.controller.BaseController;
 import com.aniikiki.abms.dto.system.UserDto;
+import com.aniikiki.abms.entity.system.MenuEntity;
 import com.aniikiki.abms.entity.system.UserEntity;
 import com.aniikiki.abms.service.system.UserService;
 import io.swagger.annotations.Api;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * 登录
@@ -40,7 +43,11 @@ public class LoginController extends BaseController {
         UserEntity user = userService.login(dto, this.getIp());
 
         if (user != null) {
+            List<MenuEntity> menuList = userService.getMenuListByUser(user.getUserId());
+
+            this.getSession().setAttribute(CommonConstants.LOGIN_USER_MENU, menuList);
             this.getSession().setAttribute(CommonConstants.LOGIN_USER, user);
+
             return CommonResult.success(user);
         } else {
             return CommonResult.failed("用户名或密码错误");
@@ -51,6 +58,12 @@ public class LoginController extends BaseController {
     @RequestMapping(value = "/info", method = RequestMethod.GET)
     public CommonResult<UserEntity> getLoginInfo() {
         return CommonResult.success(this.getCurrentUser());
+    }
+
+    @ApiOperation("获取登录用户分配的菜单信息")
+    @RequestMapping(value = "/menu", method = RequestMethod.GET)
+    public CommonResult<MenuEntity> getLoginMenuInfo() {
+        return CommonResult.success((MenuEntity) this.getSession().getAttribute(CommonConstants.LOGIN_USER_MENU));
     }
 
     @ApiOperation("注销")

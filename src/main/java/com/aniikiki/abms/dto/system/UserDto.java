@@ -27,4 +27,7 @@ public class UserDto extends UserEntity {
     @ApiModelProperty("结束日期")
     private String endDate;
 
+    @ApiModelProperty("角色ID集合")
+    private String[] roleIdArr;
+
 }

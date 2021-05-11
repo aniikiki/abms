@@ -7,6 +7,7 @@ import com.aniikiki.abms.constant.ResultMessage;
 import com.aniikiki.abms.controller.BaseController;
 import com.aniikiki.abms.dto.system.UserDto;
 import com.aniikiki.abms.entity.system.UserEntity;
+import com.aniikiki.abms.entity.system.UserRoleRelEntity;
 import com.aniikiki.abms.service.system.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -106,6 +107,29 @@ public class UserController extends BaseController {
         int count = userService.updateUser(user);
         if (count == 1) {
             return CommonResult.success(count);
+        } else {
+            return CommonResult.failed();
+        }
+    }
+
+    @ApiOperation("获取用户分配的角色信息")
+    @GetMapping("/role/{userId}")
+    public CommonResult<List<UserRoleRelEntity>> getUserRoleList(@PathVariable(value = "userId") String userId) {
+        List<UserRoleRelEntity> userRoleList = userService.getUserRoleList(userId);
+        return CommonResult.success(userRoleList);
+    }
+
+    @ApiOperation("分配角色")
+    @PostMapping("/assign/{userId}")
+    public CommonResult assignRole(@PathVariable( value = "userId") String userId, @RequestBody String[] roleIdArr) {
+        UserEntity user = userService.getUserInfo(userId);
+        if (user == null || DataStatus.DELETION.getCode().equals(user.getStatus())) {
+            return CommonResult.failed(ResultMessage.SYS_USER_NOT_FOUND);
+        }
+
+        boolean flag = userService.assignRole(userId, roleIdArr, this.getCurrentUserId());
+        if (flag) {
+            return CommonResult.success(null);
         } else {
             return CommonResult.failed();
         }

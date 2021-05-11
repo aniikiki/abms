@@ -3,9 +3,13 @@ package com.aniikiki.abms.service.system.impl;
 import com.aniikiki.abms.constant.DataStatus;
 import com.aniikiki.abms.constant.ModelOpType;
 import com.aniikiki.abms.constant.ResultMessage;
+import com.aniikiki.abms.dao.system.MenuDao;
 import com.aniikiki.abms.dao.system.UserDao;
+import com.aniikiki.abms.dao.system.UserRoleRelDao;
 import com.aniikiki.abms.dto.system.UserDto;
+import com.aniikiki.abms.entity.system.MenuEntity;
 import com.aniikiki.abms.entity.system.UserEntity;
+import com.aniikiki.abms.entity.system.UserRoleRelEntity;
 import com.aniikiki.abms.service.system.UserService;
 import com.aniikiki.abms.utils.DateUtil;
 import com.aniikiki.abms.utils.ModelUtil;
@@ -26,6 +30,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private UserRoleRelDao userRoleRelDao;
+
+    @Autowired
+    private MenuDao menuDao;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -122,5 +132,33 @@ public class UserServiceImpl implements UserService {
 
         ModelUtil.setBasicModelData(user, user.getUpdateUser(), ModelOpType.UPDATE);
         return userDao.updateByPrimaryKeySelective(user);
+    }
+
+    @Override
+    public List<UserRoleRelEntity> getUserRoleList(String userId) {
+        return userRoleRelDao.selectByCriteria(userId, null);
+    }
+
+    @Override
+    public boolean assignRole(String userId, String[] roleIdArr, String currentUserId) {
+        //与之前分配的角色解除关联
+        userRoleRelDao.updateStatusByCriteria(userId, null, DataStatus.DELETION.getCode(), currentUserId, ModelUtil.now());
+
+        //关联新分配的角色
+        if (roleIdArr.length > 0) {
+            UserDto dto = new UserDto();
+            dto.setUserId(userId);
+            dto.setRoleIdArr(roleIdArr);
+            ModelUtil.setBasicModelData(dto, currentUserId, DataStatus.ENABLE.getCode(), ModelOpType.CREATE);
+
+            int count = userRoleRelDao.insertBatch(dto);
+        }
+
+        return true;
+    }
+
+    @Override
+    public List<MenuEntity> getMenuListByUser(String userId) {
+        return menuDao.getMenuListByUser(userId);
     }
 }

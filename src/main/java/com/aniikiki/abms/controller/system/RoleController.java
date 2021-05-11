@@ -7,6 +7,7 @@ import com.aniikiki.abms.constant.ResultMessage;
 import com.aniikiki.abms.controller.BaseController;
 import com.aniikiki.abms.dto.system.RoleDto;
 import com.aniikiki.abms.entity.system.RoleEntity;
+import com.aniikiki.abms.entity.system.RoleMenuRelEntity;
 import com.aniikiki.abms.service.system.RoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -38,6 +39,14 @@ public class RoleController extends BaseController {
                                                             @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
         List<RoleEntity> roleList = roleService.getRoleList(dto, pageNum, pageSize);
         return CommonResult.success(CommonPage.restPage(roleList));
+    }
+
+    @ApiOperation("所有角色")
+    @PostMapping("/all")
+    public CommonResult<List<RoleEntity>> getRoleList(@RequestBody RoleDto dto) {
+        dto.setStatus(DataStatus.ENABLE.getCode());
+        List<RoleEntity> roleList = roleService.getRoleList(dto);
+        return CommonResult.success(roleList);
     }
 
     @ApiOperation("角色信息")
@@ -106,6 +115,29 @@ public class RoleController extends BaseController {
         int count = roleService.updateRole(role);
         if (count == 1) {
             return CommonResult.success(count);
+        } else {
+            return CommonResult.failed();
+        }
+    }
+
+    @ApiOperation("获取角色分配的菜单信息")
+    @GetMapping("/menu/{roleId}")
+    public CommonResult<List<RoleMenuRelEntity>> getRoleMenuList(@PathVariable(value = "roleId") String roleId) {
+        List<RoleMenuRelEntity> roleMenuList = roleService.getRoleMenuList(roleId);
+        return CommonResult.success(roleMenuList);
+    }
+
+    @ApiOperation("分配菜单")
+    @PostMapping("/assign/{roleId}")
+    public CommonResult assignMenu(@PathVariable( value = "roleId") String roleId, @RequestBody String[] menuIdArr) {
+        RoleEntity role = roleService.getRoleInfo(roleId);
+        if (role == null || DataStatus.DELETION.getCode().equals(role.getStatus())) {
+            return CommonResult.failed(ResultMessage.SYS_ROLE_NOT_FOUND);
+        }
+
+        boolean flag = roleService.assignMenu(roleId, menuIdArr, this.getCurrentUserId());
+        if (flag) {
+            return CommonResult.success(null);
         } else {
             return CommonResult.failed();
         }

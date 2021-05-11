@@ -12,4 +12,7 @@ public class RoleDto extends RoleEntity {
     @ApiModelProperty("不包括的角色Id")
     private String excludeRoleId;
 
+    @ApiModelProperty("菜单ID集合")
+    private String[] menuIdArr;
+
 }

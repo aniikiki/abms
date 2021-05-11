@@ -84,7 +84,6 @@ public class ContactsGroupServiceImpl implements ContactsGroupService {
             ModelUtil.setBasicModelData(dto, currentUserId, DataStatus.ENABLE.getCode(), ModelOpType.CREATE);
 
             int count = contactsGroupRelDao.insertBatch(dto);
-            System.out.println("***************" + count);
         }
 
         return true;

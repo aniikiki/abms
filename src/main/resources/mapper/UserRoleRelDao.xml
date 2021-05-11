@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aniikiki.abms.dao.system.UserRoleRelDao">
+    <resultMap id="BaseResultMap" type="UserRoleRelEntity">
+        <id column="USER_ID" jdbcType="VARCHAR" property="userId"/>
+        <result column="REL_STATUS" jdbcType="VARCHAR" property="status"/>
+        <result column="REL_CREATE_USER" jdbcType="VARCHAR" property="createUser"/>
+        <result column="REL_CREATE_TIME" jdbcType="VARCHAR" property="createTime"/>
+        <result column="REL_UPDATE_USER" jdbcType="VARCHAR" property="updateUser"/>
+        <result column="REL_UPDATE_TIME" jdbcType="VARCHAR" property="updateTime"/>
+        <association property="role" column="ROLE_ID" javaType="RoleEntity" select="com.aniikiki.abms.dao.system.RoleDao.selectByPrimaryKey"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        r.user_id, r.role_id, r.status as 'rel_status', r.create_user as 'rel_create_user', r.create_time as 'rel_create_time',
+        r.update_user as 'rel_update_user', r.update_time as 'rel_update_user'
+    </sql>
+
+    <sql id="Base_Criteria_Clause">
+        <where>
+            <if test='userId != null and userId != ""'>
+                and r.user_id = #{userId, jdbcType = VARCHAR}
+            </if>
+            <if test='roleId != null and roleId != ""'>
+                and r.role_id = #{roleId, jdbcType = VARCHAR}
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectByCriteria" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"></include>
+        from
+            user_role_rel r
+        <include refid="Base_Criteria_Clause"></include>
+        and
+            r.status = '1'
+    </select>
+
+    <update id="updateStatusByCriteria">
+        update
+            user_role_rel r
+        set
+            r.status = #{status, jdbcType = VARCHAR},
+            r.update_user = #{updateUser, jdbcType = VARCHAR},
+            r.update_time = #{updateTime, jdbcType = VARCHAR}
+        <include refid="Base_Criteria_Clause"></include>
+    </update>
+
+    <insert id="insertBatch" parameterType="UserDto">
+        insert into user_role_rel (
+            user_id,
+            role_id,
+            status,
+            create_user,
+            create_time
+        ) values
+        <foreach collection="roleIdArr" item="item" index="index" separator="," open="" close="">
+        (
+            #{userId, jdbcType = VARCHAR},
+            #{item, jdbcType = VARCHAR},
+            #{status, jdbcType = VARCHAR},
+            #{createUser, jdbcType = VARCHAR},
+            #{createTime, jdbcType = VARCHAR}
+        )
+        </foreach>
+    </insert>
+</mapper>

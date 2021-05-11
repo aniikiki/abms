@@ -41,7 +41,7 @@ public class ContactsGroupController extends BaseController {
         return CommonResult.success(CommonPage.restPage(groupList));
     }
 
-    @ApiOperation("群组列表")
+    @ApiOperation("所有群组")
     @PostMapping("/all")
     public CommonResult<List<ContactsGroupEntity>> getGroupList(@RequestBody ContactsGroupDto dto) {
         dto.setCreateUser(this.getCurrentUserId());

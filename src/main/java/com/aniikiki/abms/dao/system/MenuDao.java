@@ -22,4 +22,6 @@ public interface MenuDao {
 
     int updateStatusBatch(MenuDto dto);
 
+    List<MenuEntity> getMenuListByUser(@Param("userId") String userId);
+
 }

@@ -157,4 +157,31 @@
             #{menuId, jdbcType = VARCHAR}
         </foreach>
     </update>
+
+    <select id="getMenuListByUser" resultMap="BaseResultMap">
+        select distinct
+            <include refid="Base_Column_List"></include>
+        from
+            user u
+        join
+            user_role_rel urr
+        on
+            urr.status = '1'
+        and
+            u.user_id = urr.user_id
+        join
+            role_menu_rel rmr
+        on
+            rmr.status = '1'
+        and
+            urr.role_id = rmr.role_id
+        join
+            menu m
+        on
+            m.status = '1'
+        and
+            rmr.menu_id = m.menu_id
+        where
+            u.user_id = #{userId, jdbcType=VARCHAR}
+    </select>
 </mapper>

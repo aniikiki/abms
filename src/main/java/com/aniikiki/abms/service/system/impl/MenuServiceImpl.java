@@ -52,7 +52,7 @@ public class MenuServiceImpl implements MenuService {
     public int updateMenu(MenuEntity menu) {
         int count = this.update(menu);
 
-        /** 如果是禁用该菜单并且有子菜单，则递归禁用所有子菜单 **/
+        /** 如果是禁用父菜单，则递归禁用所有子菜单 **/
         if (DataStatus.UNABLE.getCode().equals(menu.getStatus())) {
             MenuDto dto = new MenuDto();
             dto.setStatus(DataStatus.ENABLE.getCode());

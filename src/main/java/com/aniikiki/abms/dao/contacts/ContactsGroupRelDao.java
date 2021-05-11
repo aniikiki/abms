@@ -6,11 +6,13 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Mapper
 @Repository
 public interface ContactsGroupRelDao {
 
-    ContactsGroupRelEntity selectByCriteria(@Param("groupId") String groupId, @Param("contactId") String contactId);
+    List<ContactsGroupRelEntity> selectByCriteria(@Param("groupId") String groupId, @Param("contactId") String contactId);
 
     int updateStatusByCriteria(@Param("groupId") String groupId, @Param("contactId") String contactId, @Param("status") String status, @Param("updateUser") String updateUser, @Param("updateTime") String updateTime);
 
