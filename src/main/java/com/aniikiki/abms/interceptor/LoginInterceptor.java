@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.aniikiki.abms.common.CommonResult;
 import com.aniikiki.abms.constant.CommonConstants;
 import com.aniikiki.abms.entity.system.UserEntity;
+import com.aniikiki.abms.utils.CommonUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -27,21 +29,15 @@ public class LoginInterceptor implements HandlerInterceptor {
             return true;
         } else {
             HttpSession session = request.getSession();
-            UserEntity loginUser = (UserEntity) session.getAttribute(CommonConstants.LOGIN_USER);
+            String loginUserId = (String) session.getAttribute(CommonConstants.LOGIN_USER_ID);
 
-            if (loginUser != null) {
+            if (StringUtils.isNotEmpty(loginUserId)) {
                 return true;
             }
 
-            writeReturn(response, CommonResult.unauthorized(null));
+            CommonUtil.writeReturn(response, CommonResult.unauthorized(null));
             return false;
         }
-    }
-
-    public void writeReturn(HttpServletResponse response, CommonResult result) throws IOException {
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html; charset=UTF-8");
-        response.getWriter().println(JSON.toJSONString(result));
     }
 
 }

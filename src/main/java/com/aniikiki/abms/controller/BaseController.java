@@ -20,12 +20,8 @@ public class BaseController {
         return request.getRemoteAddr();
     }
 
-    protected UserEntity getCurrentUser() {
-        return (UserEntity) getSession().getAttribute(CommonConstants.LOGIN_USER);
-    }
-
     protected String getCurrentUserId() {
-        return getCurrentUser().getUserId();
+        return (String) getSession().getAttribute(CommonConstants.LOGIN_USER_ID);
     }
 
 }

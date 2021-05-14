@@ -43,11 +43,7 @@ public class LoginController extends BaseController {
         UserEntity user = userService.login(dto, this.getIp());
 
         if (user != null) {
-            List<MenuEntity> menuList = userService.getMenuListByUser(user.getUserId());
-
-            this.getSession().setAttribute(CommonConstants.LOGIN_USER_MENU, menuList);
-            this.getSession().setAttribute(CommonConstants.LOGIN_USER, user);
-
+            this.getSession().setAttribute(CommonConstants.LOGIN_USER_ID, user.getUserId());
             return CommonResult.success(user);
         } else {
             return CommonResult.failed("用户名或密码错误");
@@ -57,19 +53,16 @@ public class LoginController extends BaseController {
     @ApiOperation("获取登录用户信息")
     @RequestMapping(value = "/info", method = RequestMethod.GET)
     public CommonResult<UserEntity> getLoginInfo() {
-        return CommonResult.success(this.getCurrentUser());
-    }
+        UserEntity user = userService.getUserInfo(this.getCurrentUserId());
+        user.setMenuList(userService.getMenuListByUser(this.getCurrentUserId()));
 
-    @ApiOperation("获取登录用户分配的菜单信息")
-    @RequestMapping(value = "/menu", method = RequestMethod.GET)
-    public CommonResult<MenuEntity> getLoginMenuInfo() {
-        return CommonResult.success((MenuEntity) this.getSession().getAttribute(CommonConstants.LOGIN_USER_MENU));
+        return CommonResult.success(user);
     }
 
     @ApiOperation("注销")
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
     public CommonResult logout() {
-        this.getSession().removeAttribute(CommonConstants.LOGIN_USER);
+        this.getSession().removeAttribute(CommonConstants.LOGIN_USER_ID);
         return CommonResult.success("");
     }
 

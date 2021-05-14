@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @ApiModel(description = "用户实体类")
@@ -42,5 +43,9 @@ public class UserEntity extends BaseEntity {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @ApiModelProperty("登录Token")
     private String token;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @ApiModelProperty("菜单List")
+    private List<MenuEntity> menuList;
 
 }

@@ -71,6 +71,9 @@ public class UserServiceImpl implements UserService {
         dto.setToken(token);
         userDao.updateByPrimaryKeySelective(dto);
 
+        //获取菜单
+        user.setMenuList(getMenuListByUser(user.getUserId()));
+
         return user;
     }
 
